@@ -13,5 +13,7 @@
     keepassxc
     gnupg
     zed-editor
+    mpv
+    mpvpaper
   ];
 }

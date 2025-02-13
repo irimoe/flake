@@ -1,6 +1,10 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  ...
+}:
 
 let
+  videoPath = "/home/iris/Videos/bg.webm";
   modifier = "Mod4";
   term = "${pkgs.foot}/bin/foot";
   menu = "${pkgs.fuzzel}/bin/fuzzel";
@@ -26,11 +30,14 @@ let
     "9" = "DP-1";
   };
 
-  workspaceBindings = builtins.concatStringsSep "\n" (builtins.map (workspace:
-    "bindsym ${modifier}+${workspace} workspace number ${workspace}")
-    (builtins.attrNames workspaces) ++ builtins.map (workspace:
-      "bindsym ${modifier}+Shift+${workspace} move container to workspace number ${workspace}")
-    (builtins.attrNames workspaces));
+  workspaceBindings = builtins.concatStringsSep "\n" (
+    builtins.map (workspace: "bindsym ${modifier}+${workspace} workspace number ${workspace}") (
+      builtins.attrNames workspaces
+    )
+    ++ builtins.map (
+      workspace: "bindsym ${modifier}+Shift+${workspace} move container to workspace number ${workspace}"
+    ) (builtins.attrNames workspaces)
+  );
 
   autostartApps = ''
     exec swww init &
@@ -44,6 +51,7 @@ let
     exec swaymsg "workspace 2; exec discord"; assign [class="discord"] 2
     exec swaymsg "workspace 1;"
     exec swaync
+    exec mpvpaper '*' "${videoPath}" -o "--loop --no-audio --no-input"
   '';
 
   floatingRules = ''
@@ -152,7 +160,7 @@ let
     shadow_color #000000DD
     shadow_inactive_color #00000000
 
-    output * bg #0a0a0a solid_color
+    # output * bg #0a0a0a solid_color
 
     layer_effects "swaync-notification-window" blur enable; blur_ignore_transparent enable
     layer_effects "swaync-control-center" blur enable; blur_ignore_transparent enable
@@ -179,20 +187,36 @@ let
     }
   '';
 
-in {
+in
+{
+
   wayland.windowManager.sway = {
     enable = true;
     package = pkgs.swayfx;
     wrapperFeatures.gtk = true;
 
-    checkConfig =
-      false; # https://github.com/nix-community/home-manager/issues/5311
+    checkConfig = false; # https://github.com/nix-community/home-manager/issues/5311
     config = null; # clear default config
 
-    extraConfig = inputConfig + "\n" + barConfig + "\n" + visuals + "\n"
-      + keybindings + "\n" + autostartApps + "\n" + floatingRules + "\n"
-      + workspaceBindings + "\n" + builtins.concatStringsSep "\n" (builtins.map
-        (workspace: "workspace ${workspace} output ${workspaces.${workspace}}")
-        (builtins.attrNames workspaces));
+    extraConfig =
+      inputConfig
+      + "\n"
+      + barConfig
+      + "\n"
+      + visuals
+      + "\n"
+      + keybindings
+      + "\n"
+      + autostartApps
+      + "\n"
+      + floatingRules
+      + "\n"
+      + workspaceBindings
+      + "\n"
+      + builtins.concatStringsSep "\n" (
+        builtins.map (workspace: "workspace ${workspace} output ${workspaces.${workspace}}") (
+          builtins.attrNames workspaces
+        )
+      );
   };
 }
