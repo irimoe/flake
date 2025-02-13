@@ -10,14 +10,14 @@ switch *args:
 dry-switch *args:
     sudo nixos-rebuild dry-activate --flake . {{args}}
 
-update:
-    nix flake update
+update *args:
+    nix flake update --extra-experimental-features nix-command --extra-experimental-features flakes {{args}}
 
 check *args:
     nix flake check --extra-experimental-features nix-command --extra-experimental-features flakes {{args}}
 
-hardware-config:
-    sudo nixos-generate-config --dir ./src
+hardware-config *args:
+    sudo nixos-generate-config --dir ./src --flake . {{args}}
 
 gc:
     nix-collect-garbage -d

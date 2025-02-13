@@ -1,5 +1,9 @@
 { ... }:
 
 {
-  imports = [ ./sway.nix ./git.nix ];
+  imports = [
+    ./sway.nix
+    ./git.nix
+    ./foot.nix
+  ];
 }

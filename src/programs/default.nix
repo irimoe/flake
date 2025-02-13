@@ -1,5 +1,10 @@
 { ... }:
 
 {
-  imports = [ ./firefox.nix ./starship.nix ./zsh.nix ./foot.nix ./misc.nix ];
+  imports = [
+    ./firefox.nix
+    ./starship.nix
+    ./zsh.nix
+    ./misc.nix
+  ];
 }

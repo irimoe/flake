@@ -15,11 +15,6 @@
     {
       manage = "desktop";
       name = "sway";
-      start = "${pkgs.sway}/bin/sway";
-    }
-    {
-      manage = "desktop";
-      name = "swayfx";
       start = "${pkgs.swayfx}/bin/swayfx";
     }
   ];
