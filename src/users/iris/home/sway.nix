@@ -11,6 +11,9 @@ let
   browser = "${pkgs.firefox}/bin/firefox";
   editor = "${pkgs.zed-editor}/bin/zed-editor";
 
+  grim = "${pkgs.grim}/bin/grim";
+  slurp = "${pkgs.slurp}/bin/slurp";
+
   direction_keys = {
     left = "Left";
     right = "Right";
@@ -129,7 +132,7 @@ let
     bindsym --locked XF86AudioPrev exec playerctl previous
     bindsym --locked XF86AudioStop exec playerctl stop
 
-    bindsym ${modifier}+Shift+s grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png && wl-copy < ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png
+    bindsym ${modifier}+Shift+s exec ${grim} -g "$(${slurp})" ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png && wl-copy < ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png
     bindsym ${modifier}+Shift+x exec killall waybar && waybar
     bindsym ${modifier}+Backspace input "6940:7076:Corsair_CORSAIR_K55_RGB_PRO_Gaming_Keyboard" xkb_switch_layout next
     bindsym ${modifier}+grave exec swaync-client -t
@@ -145,8 +148,8 @@ let
 
     corner_radius 8
     blur enable
-    blur_noise 0.1
-    blur_radius 7
+    blur_noise 0.15
+    blur_radius 8
     default_dim_inactive 0.2
 
     default_border pixel 1
