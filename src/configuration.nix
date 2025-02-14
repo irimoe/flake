@@ -16,7 +16,6 @@
 
   nix = {
     settings = {
-      sandbox = false;
       auto-optimise-store = true;
     };
 
