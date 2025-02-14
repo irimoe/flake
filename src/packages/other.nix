@@ -1,7 +1,13 @@
 { pkgs, ... }:
-
+let
+  bun = pkgs.callPackage ./bun.nix { };
+in
 {
   environment.systemPackages = with pkgs; [
+    bun
+    unzip
+    file
+
     discord
     thunderbird
     nextcloud-client
