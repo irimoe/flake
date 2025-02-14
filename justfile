@@ -17,7 +17,7 @@ check *args:
     nix flake check --extra-experimental-features nix-command --extra-experimental-features flakes {{args}}
 
 hardware-config *args:
-    sudo nixos-generate-config --dir ./src --flake . {{args}}
+    sudo nixos-generate-config --dir ./src {{args}}
 
 gc:
     nix-collect-garbage -d
