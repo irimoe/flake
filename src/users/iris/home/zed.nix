@@ -1,6 +1,30 @@
-{ pkgs, ... }:
-
 {
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+
+let
+  jsonFormat = pkgs.formats.json { };
+
+  mergedSettings =
+    cfg.userSettings
+    // (lib.optionalAttrs (builtins.length cfg.extensions > 0) {
+      auto_install_extensions = lib.genAttrs cfg.extensions (_: true);
+    });
+
+  cfg = config.programs.zed-editor;
+in
+{
+  xdg.configFile."zed/settings.json" = {
+    source = jsonFormat.generate "zed-user-settings" mergedSettings;
+    onChange = ''
+      cp $HOME/.config/zed/settings.json $HOME/.config/zed/settings.json.tmp
+      mv $HOME/.config/zed/settings.json.tmp $HOME/.config/zed/settings.json
+    '';
+  };
+
   programs.zed-editor = {
     enable = true;
     package = pkgs.zed-editor;
