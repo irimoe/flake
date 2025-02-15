@@ -6,10 +6,15 @@
 let
   videoPath = "/home/iris/Videos/bg.webm";
   modifier = "Mod4";
+
   term = "${pkgs.foot}/bin/foot";
   menu = "${pkgs.fuzzel}/bin/fuzzel";
   browser = "${pkgs.firefox}/bin/firefox";
   editor = "${pkgs.zed-editor}/bin/zed-editor";
+  discord = "${pkgs.discord}/bin/discord";
+  thunderbird = "${pkgs.thunderbird}/bin/thunderbird";
+  youtube-music = "${pkgs.youtube-music}/bin/youtube-music";
+  keepassxc = "${pkgs.keepassxc}/bin/keepassxc";
 
   grim = "${pkgs.grim}/bin/grim";
   slurp = "${pkgs.slurp}/bin/slurp";
@@ -43,16 +48,16 @@ let
   );
 
   autostartApps = ''
-    exec swww init &
     exec swayidle -w timeout 300 '~/.config/scripts/lock' &
     exec waybar
     exec swaymsg "workspace 1; exec ${editor}"; assign [class="${editor}"] 1
     exec swaymsg "workspace 1; exec ${term}"; assign [class="${term}"] 1
-    exec swaymsg "workspace 5; exec thunderbird"; assign [class="thunderbird"] 5
-    exec swaymsg "workspace 9; exec keepassxc"; assign [class="keepassxc"] 9
+    exec swaymsg "workspace 5; exec ${thunderbird}"; assign [class="${thunderbird}"] 5
+    exec swaymsg "workspace 5; exec ${youtube-music}"; assign [class="${youtube-music}"] 5
+    exec swaymsg "workspace 9; exec ${keepassxc}"; assign [class="${keepassxc}"] 9
     exec swaymsg "workspace 2; exec ${browser}"; assign [class="${browser}"] 2
-    exec swaymsg "workspace 2; exec discord"; assign [class="discord"] 2
-    exec swaymsg "workspace 1;"
+    exec swaymsg "workspace 2; exec ${discord}"; assign [class="${discord}"] 2
+    exec swaymsg "workspace 9;"
     exec swaync
     exec mpvpaper '*' "${videoPath}" -o "--loop --no-audio --no-input"
   '';
