@@ -5,6 +5,7 @@ in
 {
   environment.systemPackages = with pkgs; [
     bun
+
     unzip
     file
 
@@ -18,7 +19,6 @@ in
     playerctl
     keepassxc
     gnupg
-    zed-editor
     mpv
     mpvpaper
   ];

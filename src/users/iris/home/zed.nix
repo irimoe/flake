@@ -7,6 +7,7 @@
 
 let
   jsonFormat = pkgs.formats.json { };
+  zed-editor = pkgs.callPackage ../programs/zed-editor.nix { };
 
   mergedSettings =
     cfg.userSettings
@@ -27,7 +28,7 @@ in
 
   programs.zed-editor = {
     enable = true;
-    package = pkgs.zed-editor;
+    package = zed-editor;
 
     extraPackages = with pkgs; [
       nixd

@@ -7,10 +7,12 @@ let
   videoPath = "/home/iris/Videos/bg.webm";
   modifier = "Mod4";
 
+  zed-editor = pkgs.callPackage ../programs/zed-editor.nix { };
+
   term = "${pkgs.foot}/bin/foot";
   menu = "${pkgs.fuzzel}/bin/fuzzel";
   browser = "${pkgs.firefox}/bin/firefox";
-  editor = "${pkgs.zed-editor}/bin/zed-editor";
+  editor = "${zed-editor}/bin/zed-editor";
   discord = "${pkgs.discord}/bin/discord";
   thunderbird = "${pkgs.thunderbird}/bin/thunderbird";
   youtube-music = "${pkgs.youtube-music}/bin/youtube-music";
