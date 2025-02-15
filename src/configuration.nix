@@ -32,6 +32,12 @@
     efi.canTouchEfiVariables = true;
   };
 
+  virtualisation.docker.enable = true;
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
+  };
+
   nixpkgs.config.allowUnfree = true;
 
   system.stateVersion = "24.11";
