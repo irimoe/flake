@@ -20,6 +20,7 @@
       imports = [
         ./desktop
         ./shell
+        ./scripts
       ];
 
       home.pointerCursor = {

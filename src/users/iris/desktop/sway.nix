@@ -28,9 +28,6 @@ let
 
   get-layout = "${swaymsg} -t get_inputs | ${jq} 'map(select(has(\"xkb_active_layout_name\")))[0].xkb_active_layout_name'";
 
-  grim = "${pkgs.grim}/bin/grim";
-  slurp = "${pkgs.slurp}/bin/slurp";
-
   direction_keys = {
     left = "q";
     right = "w";
@@ -151,13 +148,12 @@ let
     bindsym --locked XF86MonBrightnessUp exec ${swayosd} --brightness raise
     bindsym --locked XF86MonBrightnessDown exec ${swayosd} --brightness lower
 
-    bindsym --locked XF86AudioPlay exec playerctl play-pause && ${swayosd} --custom-icon "play" --custom-message "$(playerctl status)"
-    bindsym --locked XF86AudioNext exec playerctl next && ${swayosd} --custom-icon "next" --custom-message "Next"
-    bindsym --locked XF86AudioPrev exec playerctl previous && ${swayosd} --custom-icon "previous" --custom-message "Previous"
-    bindsym --locked XF86AudioStop exec playerctl stop && ${swayosd} --custom-icon "stop" --custom-message "Stopped"
+    bindsym --locked XF86AudioPlay exec media-things --play-pause
+    bindsym --locked XF86AudioNext exec media-things --next
+    bindsym --locked XF86AudioPrev exec media-things --previous
+    bindsym --locked XF86AudioStop exec media-things --stop
 
-    bindsym ${super}+Shift+d exec ${grim} -g "$(${slurp})" ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png && wl-copy < ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png && ${swayosd} --custom-message "Screenshot taken"
-    bindsym ${super}+Shift+x exec killall waybar && waybar
+    bindsym ${super}+Shift+d exec screenshot
     bindsym ${super}+Backspace input "6940:7076:Corsair_CORSAIR_K55_RGB_PRO_Gaming_Keyboard" xkb_switch_layout next; exec ${swayosd} --custom-message "Layout changed to $(${get-layout})"
   '';
 
