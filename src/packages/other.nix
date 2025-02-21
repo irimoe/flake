@@ -25,6 +25,8 @@ in
     file
     obs-studio
     obs-studio-plugins.obs-vkcapture
+    obs-studio-plugins.obs-pipewire-audio-capture
+    obs-studio-plugins.wlrobs
 
     discord
     thunderbird

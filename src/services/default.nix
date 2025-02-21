@@ -3,10 +3,14 @@
 {
   imports = [
     ./xserver.nix
-    ./flatpak.nix
-    ./gnome-keyring.nix
-    ./printing.nix
     ./pipewire.nix
-    ./mpd.nix
   ];
+
+  services = {
+    flatpak.enable = true;
+    gnome.gnome-keyring.enable = true;
+    mpd.enable = true;
+    printing.enable = true;
+    displayManager.ly.enable = true;
+  };
 }
