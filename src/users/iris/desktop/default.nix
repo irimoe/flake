@@ -1,7 +1,8 @@
 { ... }:
+
 {
   imports = [
-    ./firefox.nix
-    ./zsh.nix
+    ./foot.nix
+    ./sway.nix
   ];
 }

@@ -17,7 +17,10 @@
       home.stateVersion = "23.05";
       nixpkgs.config.allowUnfree = true;
 
-      imports = [ ./home ];
+      imports = [
+        ./desktop
+        ./shell
+      ];
 
       home.pointerCursor = {
         name = "Adwaita";

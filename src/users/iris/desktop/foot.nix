@@ -5,9 +5,6 @@
     enable = true;
     package = pkgs.foot;
 
-    # enableBashIntegration = true;
-    # enableZshIntegration = true;
-
     settings = {
       main = {
         font = "JetBrainsMono Nerd Font";
