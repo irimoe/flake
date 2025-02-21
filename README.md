@@ -4,11 +4,11 @@ my nixos flake config. don't shout at me this is my first time using nix{,os}.
 
 ## usage
 
-i use [casey/just](https://github.com/casey/just) for running commands.
+i use [github:casey/just](https://github.com/casey/just) for running commands.
 
 ```sh
-git clone https://git.gay/iris/nixos.git
-cd nixos
+git clone https://git.gay/iris/flake.git
+cd flake
 just switch <args>
 ```
 **tip!** check the [`justfile`](justfile) or run `just --list` for more commands!
