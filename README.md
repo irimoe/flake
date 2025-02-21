@@ -2,28 +2,6 @@
 
 my nixos flake config. don't shout at me this is my first time using nix{,os}.
 
-## overview
-
-```
-nixos/
-├── src/
-│   ├── configuration.nix
-│   ├── hardware-configuration.nix
-│   ├── networking.nix
-│   ├── l10n.nix
-│   ├── home-manager.nix
-│   ├── services/
-│   ├── programs/
-│   ├── packages/
-│   └── users/
-│       └── iris/
-│           ├── home/
-│           └── programs/
-├── flake.nix
-├── justfile
-└── README.md
-```
-
 ## usage
 
 i use [casey/just](https://github.com/casey/just) for running commands.
