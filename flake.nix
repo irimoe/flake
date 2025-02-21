@@ -7,14 +7,18 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, home-manager, ... }: {
-    nixosConfigurations = {
-      nixos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules =
-          [ ./src/configuration.nix home-manager.nixosModules.home-manager ];
-        specialArgs = { inherit home-manager; };
+  outputs =
+    { nixpkgs, home-manager, ... }:
+    {
+      nixosConfigurations = {
+        nixos = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./src/configuration.nix
+            home-manager.nixosModules.home-manager
+          ];
+          specialArgs = { inherit home-manager; };
+        };
       };
     };
-  };
 }
