@@ -7,7 +7,7 @@ let
   videoPath = "/home/iris/Videos/bg.webm";
   super = "Mod4";
 
-  zed-editor = pkgs.callPackage ../../../packages/zed-editor.nix { };
+  zed-editor = pkgs.callPackage ../../../packages/derivations/zed-editor.nix { };
 
   term = "${pkgs.foot}/bin/foot";
   menu = "${pkgs.fuzzel}/bin/fuzzel";

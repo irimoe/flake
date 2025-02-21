@@ -2,14 +2,10 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
-    ./networking.nix
-    ./l10n.nix
-    ./services
-    ./programs
     ./packages
+    ./system
     ./users
-    ./home-manager.nix
+    ./hardware-configuration.nix
 
     home-manager.nixosModules.home-manager
   ];

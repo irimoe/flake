@@ -1,11 +1,9 @@
-{ ... }:
-
+{ pkgs, ... }:
+let
+  derivations = import ./derivations/packages.nix { inherit pkgs; };
+in
 {
   imports = [
-    ./utilities.nix
-    ./wayland.nix
-    ./sys-info.nix
-    ./other.nix
-    ./fonts.nix
+    (import ./groups { inherit pkgs derivations; })
   ];
 }
