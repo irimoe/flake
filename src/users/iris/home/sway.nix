@@ -5,9 +5,9 @@
 
 let
   videoPath = "/home/iris/Videos/bg.webm";
-  modifier = "Mod4";
+  super = "Mod4";
 
-  zed-editor = pkgs.callPackage ../programs/zed-editor.nix { };
+  zed-editor = pkgs.callPackage ../../../packages/zed-editor.nix { };
 
   term = "${pkgs.foot}/bin/foot";
   menu = "${pkgs.fuzzel}/bin/fuzzel";
@@ -18,14 +18,24 @@ let
   youtube-music = "${pkgs.youtube-music}/bin/youtube-music";
   keepassxc = "${pkgs.keepassxc}/bin/keepassxc";
 
+  jq = "${pkgs.jq}/bin/jq";
+
+  swaymsg = "${pkgs.sway}/bin/swaymsg";
+  swayosd = "${pkgs.swayosd}/bin/swayosd-client";
+  swayosd-server = "${pkgs.swayosd}/bin/swayosd-server";
+  swaync = "${pkgs.swaynotificationcenter}/bin/swaync";
+  swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
+
+  get-layout = "${swaymsg} -t get_inputs | ${jq} 'map(select(has(\"xkb_active_layout_name\")))[0].xkb_active_layout_name'";
+
   grim = "${pkgs.grim}/bin/grim";
   slurp = "${pkgs.slurp}/bin/slurp";
 
   direction_keys = {
-    left = "Left";
-    right = "Right";
-    up = "Up";
-    down = "Down";
+    left = "q";
+    right = "w";
+    up = "a";
+    down = "s";
   };
 
   workspaces = {
@@ -41,27 +51,30 @@ let
   };
 
   workspaceBindings = builtins.concatStringsSep "\n" (
-    builtins.map (workspace: "bindsym ${modifier}+${workspace} workspace number ${workspace}") (
+    builtins.map (workspace: "bindsym ${super}+${workspace} workspace number ${workspace}") (
       builtins.attrNames workspaces
     )
     ++ builtins.map (
-      workspace: "bindsym ${modifier}+Shift+${workspace} move container to workspace number ${workspace}"
+      workspace: "bindsym ${super}+Shift+${workspace} move container to workspace number ${workspace}"
     ) (builtins.attrNames workspaces)
   );
 
   autostartApps = ''
-    exec swayidle -w timeout 300 '~/.config/scripts/lock' &
-    exec waybar
-    exec swaymsg "workspace 1; exec ${editor}"; assign [class="${editor}"] 1
-    exec swaymsg "workspace 1; exec ${term}"; assign [class="${term}"] 1
-    exec swaymsg "workspace 5; exec ${thunderbird}"; assign [class="${thunderbird}"] 5
-    exec swaymsg "workspace 5; exec ${youtube-music}"; assign [class="${youtube-music}"] 5
-    exec swaymsg "workspace 9; exec ${keepassxc}"; assign [class="${keepassxc}"] 9
-    exec swaymsg "workspace 2; exec ${browser}"; assign [class="${browser}"] 2
-    exec swaymsg "workspace 2; exec ${discord}"; assign [class="${discord}"] 2
-    exec swaymsg "workspace 9;"
-    exec swaync
+    exec ${swaync}
+    exec ${swayosd-server}
     exec mpvpaper '*' "${videoPath}" -o "--loop --no-audio --no-input"
+
+    exec waybar
+    exec swaymsg "workspace 1; exec ${editor}"; assign [class="dev.zed.Zed"] 1
+    exec swaymsg "workspace 1; exec ${term}"; assign [class="foot"] 1
+    exec swaymsg "workspace 5; exec ${thunderbird}"; assign [class="${thunderbird}"] 5
+    exec swaymsg "workspace 5; exec ${youtube-music}"; assign [class="com.github.th_ch.youtube_music"] 5
+    exec swaymsg "workspace 9; exec ${keepassxc}"; assign [class="org.keepassxc.KeePassXC"] 9
+
+    exec swaymsg "workspace 2; exec ${browser}"; assign [class="firefox"] 2
+    exec swaymsg "workspace 2; exec ${discord}"; assign [class="discord"] 2
+
+    exec swaymsg "workspace 9;"
   '';
 
   floatingRules = ''
@@ -84,38 +97,43 @@ let
     for_window [title = "Firefox — Sharing Indicator"] kill
     for_window [title = "librewolf - Sharing Indicator"] kill
     for_window [title = "librewolf — Sharing Indicator"] kill
+    for_window [app_id="swaymux"] floating enable
   '';
 
   keybindings = ''
-    bindsym ${modifier}+t exec ${term}
-    bindsym ${modifier}+Shift+q kill
-    bindsym ${modifier}+d exec ${menu}
-    floating_modifier ${modifier} normal
-    bindsym ${modifier}+Shift+c reload; exec killall waybar && waybar && swaync-client -rs && swaync-client --reload-config
-    bindsym ${modifier}+Shift+e exec swaynag -t warning -m 'Exit' -B 'Yes' 'swaymsg exit'
+    bindsym ${super}+t exec ${term}
+    bindsym ${super}+Shift+e kill
+    bindsym ${super}+d exec ${menu}
+    floating_modifier ${super} normal
+    bindsym ${super}+Shift+c reload; exec killall waybar && waybar && swaync-client -rs && swaync-client --reload-config
+    bindsym ${super}+Ctrl+Shift+e exec swaynag -t warning -m 'Exit' -B 'Yes' 'swaymsg exit'
 
-    bindsym ${modifier}+${direction_keys.left} focus left
-    bindsym ${modifier}+${direction_keys.down} focus down
-    bindsym ${modifier}+${direction_keys.up} focus up
-    bindsym ${modifier}+${direction_keys.right} focus right
+    bindsym ${super}+${direction_keys.left} focus left
+    bindsym ${super}+${direction_keys.right} focus right
+    bindsym ${super}+${direction_keys.up} focus up
+    bindsym ${super}+${direction_keys.down} focus down
 
-    bindsym ${modifier}+Shift+h move left
-    bindsym ${modifier}+Shift+j move down
-    bindsym ${modifier}+Shift+k move up
-    bindsym ${modifier}+Shift+l move right
+    bindsym ${super}+${direction_keys.left}+Shift move left
+    bindsym ${super}+${direction_keys.right}+Shift move right
+    bindsym ${super}+${direction_keys.up}+Shift move up
+    bindsym ${super}+${direction_keys.down}+Shift move down
 
-    bindsym ${modifier}+b splith
-    bindsym ${modifier}+v splitv
-    bindsym ${modifier}+s layout stacking
-    bindsym ${modifier}+w layout tabbed
-    bindsym ${modifier}+e layout toggle split
-    bindsym ${modifier}+f fullscreen
-    bindsym ${modifier}+Shift+space floating toggle
-    bindsym ${modifier}+space focus mode_toggle
-    bindsym ${modifier}+a focus parentc
+    bindsym ${super}+b splith
+    bindsym ${super}+Ctrl+Shift+b splitv
+    bindsym ${super}+Ctrl+Shift+s layout stacking
+    bindsym ${super}+Ctrl+Shift+w layout tabbed
+    bindsym ${super}+Alt+e layout toggle split
 
-    bindsym ${modifier}+Shift+minus move scratchpad
-    bindsym ${modifier}+minus scratchpad show
+    bindsym ${super}+f fullscreen
+    bindsym ${super}+Shift+space floating toggle
+    bindsym ${super}+space focus mode_toggle
+    # bindsym ${super}+a focus parent
+
+    # bindsym ${super}+Shift+Tab move scratchpad
+    # bindsym ${super}+Tab scratchpad show
+
+    bindsym ${super}+grave exec swaymux
+    bindsym ${super}+Tab exec ${swaync-client} -t -sw
 
     mode "resize" {
         bindsym ${direction_keys.left} resize shrink width 10px
@@ -125,24 +143,22 @@ let
         bindsym Return mode "default"
         bindsym Escape mode "default"
     }
-    bindsym ${modifier}+Shift+r mode "resize"
+    bindsym ${super}+Shift+r mode "resize"
 
-    bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && pactl set-sink-mute @DEFAULT_SINK@ 0
-    bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && pactl set-sink-mute @DEFAULT_SINK@ 0
-    bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-    bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-    bindsym --locked XF86MonBrightnessUp exec brightnessctl set +10%
-    bindsym --locked XF86MonBrightnessDown exec brightnessctl set 10%-
+    bindsym --locked XF86AudioRaiseVolume exec ${swayosd} --output-volume raise 5
+    bindsym --locked XF86AudioLowerVolume exec ${swayosd} --output-volume lower 5
+    bindsym --locked XF86AudioMicMute exec ${swayosd} --output-volume mute-toggle
+    bindsym --locked XF86MonBrightnessUp exec ${swayosd} --brightness raise
+    bindsym --locked XF86MonBrightnessDown exec ${swayosd} --brightness lower
 
-    bindsym --locked XF86AudioPlay exec playerctl play-pause
-    bindsym --locked XF86AudioNext exec playerctl next
-    bindsym --locked XF86AudioPrev exec playerctl previous
-    bindsym --locked XF86AudioStop exec playerctl stop
+    bindsym --locked XF86AudioPlay exec playerctl play-pause && ${swayosd} --custom-icon "play" --custom-message "$(playerctl status)"
+    bindsym --locked XF86AudioNext exec playerctl next && ${swayosd} --custom-icon "next" --custom-message "Next"
+    bindsym --locked XF86AudioPrev exec playerctl previous && ${swayosd} --custom-icon "previous" --custom-message "Previous"
+    bindsym --locked XF86AudioStop exec playerctl stop && ${swayosd} --custom-icon "stop" --custom-message "Stopped"
 
-    bindsym ${modifier}+Shift+s exec ${grim} -g "$(${slurp})" ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png && wl-copy < ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png
-    bindsym ${modifier}+Shift+x exec killall waybar && waybar
-    bindsym ${modifier}+Backspace input "6940:7076:Corsair_CORSAIR_K55_RGB_PRO_Gaming_Keyboard" xkb_switch_layout next
-    bindsym ${modifier}+grave exec swaync-client -t
+    bindsym ${super}+Shift+d exec ${grim} -g "$(${slurp})" ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png && wl-copy < ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png && ${swayosd} --custom-message "Screenshot taken"
+    bindsym ${super}+Shift+x exec killall waybar && waybar
+    bindsym ${super}+Backspace input "6940:7076:Corsair_CORSAIR_K55_RGB_PRO_Gaming_Keyboard" xkb_switch_layout next; exec ${swayosd} --custom-message "Layout changed to $(${get-layout})"
   '';
 
   visuals = ''
@@ -174,6 +190,8 @@ let
 
     layer_effects "swaync-notification-window" blur enable; blur_ignore_transparent enable
     layer_effects "swaync-control-center" blur enable; blur_ignore_transparent enable
+    layer_effects "swayosd" blur enable; blur_ignore_transparent enable
+    layer_effects "astral" blur enable; blur_ignore_transparent enable
   '';
 
   inputConfig = ''
@@ -184,21 +202,18 @@ let
     }
   '';
 
-  barConfig = ''
-    bar {
-        position bottom
-        status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-
-        colors {
-            statusline #ffffff
-            background #323232
-            inactive_workspace #32323200 #32323200 #5c5c5c
-        }
-    }
-  '';
-
 in
 {
+
+  home.packages = [
+    pkgs.swayosd
+    pkgs.swaymux
+    pkgs.swaynotificationcenter
+    pkgs.swaylock
+    pkgs.swaylock-fancy
+    pkgs.i3lock-color # dep of swaylock-fancy
+    pkgs.wmctrl
+  ];
 
   wayland.windowManager.sway = {
     enable = true;
@@ -210,8 +225,6 @@ in
 
     extraConfig =
       inputConfig
-      + "\n"
-      + barConfig
       + "\n"
       + visuals
       + "\n"

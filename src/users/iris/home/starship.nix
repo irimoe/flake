@@ -5,7 +5,7 @@
     enable = true;
 
     enableZshIntegration = true;
-    enableFishIntegration = true;
+    enableFishIntegration = false;
 
     settings = pkgs.lib.importTOML ../files/starship.toml;
 

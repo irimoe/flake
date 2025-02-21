@@ -7,5 +7,6 @@
     ./gnome-keyring.nix
     ./printing.nix
     ./pipewire.nix
+    ./mpd.nix
   ];
 }

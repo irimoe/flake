@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  users.defaultUserShell = pkgs.zsh;
+  users.defaultUserShell = pkgs.fish;
   users.users.iris = {
     isNormalUser = true;
     description = "iris";

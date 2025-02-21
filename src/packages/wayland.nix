@@ -5,7 +5,6 @@
     grim
     slurp
     wl-clipboard
-    mako
     foot
     fuzzel
   ];
