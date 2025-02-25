@@ -4,6 +4,9 @@
     derivations.zed-editor
     derivations.bun
 
+    nodejs_23
+    dig
+
     gcc
     glibc
 

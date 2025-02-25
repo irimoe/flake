@@ -19,7 +19,7 @@
 
       imports = [
         ./desktop
-        ./shell
+        ./programs
         ./scripts
       ];
 

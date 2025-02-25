@@ -4,6 +4,7 @@
   ...
 }:
 let
+
   zedSettings = builtins.toJSON {
     collaboration_panel.button = false;
     auto_update = false;
@@ -95,6 +96,34 @@ let
     code_actions_on_format = {
       "source.fixAll.biome" = true;
       "source.organizeImports.biome" = true;
+    };
+
+    language_models.openai = {
+      version = "1";
+      api_url = "https://openrouter.ai/api/v1";
+      available_models = [
+        {
+          name = "deepseek/deepseek-r1:free";
+          display_name = "DeepSeek R1";
+          max_tokens = 163840;
+          max_output_tokens = 4096;
+          max_completion_tokens = 4096;
+        }
+        {
+          name = "deepseek/deepseek-chat:free";
+          display_name = "DeepSeek V3";
+          max_tokens = 32768;
+          max_output_tokens = 32768;
+          max_completion_tokens = 32768;
+        }
+        {
+          name = "google/gemini-exp-1206:free";
+          display_name = "Gemini Exp 1206";
+          max_tokens = 131072;
+          max_output_tokens = 128000;
+          max_completion_tokens = 128000;
+        }
+      ];
     };
 
     theme = {
