@@ -92,12 +92,6 @@ let
 
     };
 
-    formatter.language_server.name = "biome";
-    code_actions_on_format = {
-      "source.fixAll.biome" = true;
-      "source.organizeImports.biome" = true;
-    };
-
     language_models.openai = {
       version = "1";
       api_url = "https://openrouter.ai/api/v1";
@@ -128,26 +122,56 @@ let
 
     theme = {
       mode = "dark";
-      dark = "Ayu Dark";
-      light = "Gruvbox Light Hard";
+      dark = "Catppuccin Mocha";
+      light = "Catppuccin Latte";
     };
   };
 
   copyScript = pkgs.writeShellScript "copy-zed-settings" ''
-    mkdir -p $HOME/.config/zed
-    settings_file="$HOME/.config/zed/settings.json"
+    SETTINGS_FILE="$HOME/.config/zed/settings.json"
+    LOG_FILE="$HOME/.config/zed/log"
 
-    if [ -L "$settings_file" ] || [ ! -f "$settings_file" ]; then
-        mv -f "$settings_file" "$settings_file.$(date +%s)"
+    current_date=$(date)
+    pretty_date=$(date +"%Y-%m-%d %H:%M:%S")
+    backup_file="$HOME/.config/zed/bak/settings.$(pretty_date).json"
+
+    log_content=$(cat "$LOG_FILE" 2>/dev/null || echo "")
+
+    mkdir -p $HOME/.config/zed/bak
+    rm $LOG_FILE
+
+    full_line="    ran at $current_date    "
+    separator=$(echo "$full_line" | tr 'a-zA-Z0-9: ' '=')
+
+    echo "|$separator|" >> $LOG_FILE
+    echo "|$full_line|" >> $LOG_FILE
+    echo "|$separator|" >> $LOG_FILE
+
+    echo "|      prep : mkdir -p $HOME/.config/zed/bak" >> $LOG_FILE
+    echo "|      prep : rm $LOG_FILE" >> $LOG_FILE
+
+    echo "|  settings : $SETTINGS_FILE" >> $LOG_FILE
+    echo "|       log : $LOG_FILE" >> $LOG_FILE
+
+    echo "|       cmd : mv -f $SETTINGS_FILE $backup_file" >> $LOG_FILE
+    mv -f "$SETTINGS_FILE" "$backup_file"
+
+    echo "|       cmd : cp ${pkgs.writeText "zed-settings.json" zedSettings} $SETTINGS_FILE" >> $LOG_FILE
+    echo "|       cmd : chmod u+w $SETTINGS_FILE" >> $LOG_FILE
+    cp ${pkgs.writeText "zed-settings.json" zedSettings} "$SETTINGS_FILE"
+    chmod u+w "$SETTINGS_FILE"
+
+    echo "|       cmd : echo 'Settings copied successfully.'" >> $LOG_FILE
+
+    if [ -n "$log_content" ]; then
+        echo "" >> $LOG_FILE
+        echo "$log_content" >> $LOG_FILE
     fi
-
-    cp ${pkgs.writeText "zed-settings.json" zedSettings} "$settings_file"
-    chmod u+w "$settings_file"
   '';
 in
 {
   home.activation.copyZedSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD ${copyScript}
+    ${copyScript}
   '';
 
   programs.zed-editor = {
@@ -166,9 +190,7 @@ in
       "log"
       "html"
       "vue"
-      "biome"
     ];
 
-    installRemoteServer = true;
   };
 }
