@@ -12,6 +12,14 @@
     just
     tmux
 
+    imv
+    zellij
+    libsForQt5.polkit-kde-agent
+    wl-clipboard
+
+    wirelesstools
+    fuse3
+
     libnotify
     imagemagick
     jq
@@ -23,6 +31,8 @@
     gnupg
     mpv
     mpvpaper
+
+    killall
 
     # system information
     neofetch
