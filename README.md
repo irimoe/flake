@@ -1,19 +1,50 @@
 # nixos flake
 
-my nixos flake config. don't shout at me this is my first time using nix{,os}.
+my nixos flake. don't shout at me this is my first time using nix{,os}.
+
+## structure
+
+```
+nixos/
+├── hosts/
+│   └── nixos/
+├── modules/
+│   ├── system/
+│   │   ├── packages/
+│   │   │   ├── global.nix
+│   │   │   ├── system.nix
+│   │   │   └── fonts.nix
+│   │   ├── programs/
+│   │   └── services/
+│   └── users/
+│       └── iris/
+│           ├── desktop/
+│           ├── packages/
+│           ├── programs/
+│           └── scripts/
+├── pkgs/
+└── overlays/
+```
 
 ## usage
 
 i use [github:casey/just](https://github.com/casey/just) for running commands.
 
 ```sh
-git clone https://git.gay/iris/flake.git
+git clone https://github.com/irimoe/flake.git
 cd flake
-just switch <args>
+just switch
 ```
+
 **tip!** check the [`justfile`](justfile) or run `just --list` for more commands!
 
+### common tasks
 
+- `just switch` - apply configuration
+- `just build` - build without applying
+- `just update` - update flake inputs
+- `just gc` - run garbage collection
+- `just check` - check flake for errors
 
 ## copying
 
