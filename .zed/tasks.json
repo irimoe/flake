@@ -1,0 +1,9 @@
+[
+  {
+    "label": "switch",
+    "shell": "system",
+    "command": "just",
+    "args": ["switch"],
+    "hide": "on_success"
+  }
+]
