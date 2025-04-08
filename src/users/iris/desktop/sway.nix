@@ -4,7 +4,6 @@
 }:
 
 let
-  videoPath = "/home/iris/Videos/bg.webm";
   super = "Mod4";
 
   zed-editor = pkgs.callPackage ../../../packages/derivations/zed-editor.nix { };
@@ -15,7 +14,7 @@ let
   editor = "${zed-editor}/bin/zed-editor";
   discord = "${pkgs.discord}/bin/discord";
   thunderbird = "${pkgs.thunderbird}/bin/thunderbird";
-  youtube-music = "${pkgs.youtube-music}/bin/youtube-music";
+  spotify = "${pkgs.spotify}/bin/spotify";
   keepassxc = "${pkgs.keepassxc}/bin/keepassxc";
 
   jq = "${pkgs.jq}/bin/jq";
@@ -59,19 +58,21 @@ let
   autostartApps = ''
     exec ${swaync}
     exec ${swayosd-server}
-    exec mpvpaper '*' "${videoPath}" -o "--loop --no-audio --no-input"
+    exec wallpaper-cycle
 
-    exec waybar
-    exec swaymsg "workspace 1; exec ${editor}"; assign [class="dev.zed.Zed"] 1
-    exec swaymsg "workspace 1; exec ${term}"; assign [class="foot"] 1
-    exec swaymsg "workspace 5; exec ${thunderbird}"; assign [class="${thunderbird}"] 5
-    exec swaymsg "workspace 5; exec ${youtube-music}"; assign [class="com.github.th_ch.youtube_music"] 5
-    exec swaymsg "workspace 9; exec ${keepassxc}"; assign [class="org.keepassxc.KeePassXC"] 9
+    exec swaymsg "workspace 3; exec ${editor}"; assign [class="dev.zed.Zed"] 3
+    exec swaymsg "workspace 3; exec ${term}"; assign [class="foot"] 3
+    exec swaymsg "workspace 9; exec ${thunderbird}"; assign [class="${thunderbird}"] 9
+    exec swaymsg "workspace 9; exec ${spotify}"; assign [class="Spotify"] 9
+    exec swaymsg "workspace 8; exec ${keepassxc}"; assign [class="org.keepassxc.KeePassXC"] 8
 
-    exec swaymsg "workspace 2; exec ${browser}"; assign [class="firefox"] 2
+    exec swaymsg "workspace 1; exec ${browser}"; assign [class="firefox"] 1
     exec swaymsg "workspace 2; exec ${discord}"; assign [class="discord"] 2
 
-    exec swaymsg "workspace 9;"
+    assign [app_id="nya"] 4
+
+    exec swaymsg "workspace 8;"
+    exec /home/iris/Me/bar/target/debug/sylph
   '';
 
   floatingRules = ''
@@ -95,6 +96,8 @@ let
     for_window [title = "librewolf - Sharing Indicator"] kill
     for_window [title = "librewolf — Sharing Indicator"] kill
     for_window [app_id="swaymux"] floating enable
+
+    for_window [app_id="nya"] move workspace 4
   '';
 
   keybindings = ''
@@ -187,7 +190,7 @@ let
     layer_effects "swaync-notification-window" blur enable; blur_ignore_transparent enable
     layer_effects "swaync-control-center" blur enable; blur_ignore_transparent enable
     layer_effects "swayosd" blur enable; blur_ignore_transparent enable
-    layer_effects "astral" blur enable; blur_ignore_transparent enable
+    layer_effects "sylph" blur enable; blur_ignore_transparent enable
   '';
 
   inputConfig = ''
