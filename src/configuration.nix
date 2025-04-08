@@ -1,4 +1,4 @@
-{ home-manager, ... }:
+{ home-manager, inputs, ... }:
 
 {
   imports = [
@@ -9,6 +9,8 @@
 
     home-manager.nixosModules.home-manager
   ];
+
+  home-manager.extraSpecialArgs = { inherit inputs; };
 
   nix = {
     settings = {
@@ -28,6 +30,7 @@
     efi.canTouchEfiVariables = true;
   };
 
+  virtualisation.waydroid.enable = true;
   virtualisation.docker.enable = true;
   virtualisation.docker.rootless = {
     enable = true;

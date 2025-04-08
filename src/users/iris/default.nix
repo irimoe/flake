@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   users.defaultUserShell = pkgs.fish;
@@ -22,6 +22,8 @@
         ./programs
         ./scripts
       ];
+
+      _module.args = { inherit inputs; };
 
       home.pointerCursor = {
         name = "Adwaita";

@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [
@@ -7,5 +7,6 @@
     ./starship.nix
     ./zsh.nix
     ./radicle.nix
+    ./spicetify.nix
   ];
 }
