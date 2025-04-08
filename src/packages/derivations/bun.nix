@@ -18,5 +18,11 @@ pkgs.stdenv.mkDerivation {
     unzip -o $src
     chmod +x bun-linux-x64-baseline/bun
     mv bun-linux-x64-baseline/bun $out/bin/
+
+    cat > $out/bin/bunx << EOF
+    #!/bin/sh
+    exec $out/bin/bun x "\$@"
+    EOF
+    chmod +x $out/bin/bunx
   '';
 }
