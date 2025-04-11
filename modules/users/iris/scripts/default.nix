@@ -42,10 +42,9 @@ let
   screenshot = pkgs.writeShellScriptBin "screenshot" ''
     #!/usr/bin/env bash
     function screenshot {
-        pid=$1
         path="/home/iris/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png"
         grim -c -g "$(slurp)" "$path" && wl-copy < "$path";
-        kill $pid
+        killall wayfreeze
 
         result=$(notify-send "screenshot saved!" "$path" \
             --action=open="open in imv" \
@@ -61,7 +60,9 @@ let
             fi
     }
 
-    wayfreeze & PID=$!; sleep .1; screenshot $PID
+    wayfreeze &
+    screenshot $PID &
+
   '';
 
   wallpaper = pkgs.writeShellScriptBin "wallpaper-cycle" ''
@@ -74,11 +75,26 @@ let
     ${swayosd} --custom-icon "image-x-generic" --custom-message "Wallpaper changed to '$RND'"
   '';
 
+  gituser = pkgs.writeShellScriptBin "gituser" ''
+    #!/usr/bin/env bash
+    if [ "$1" == "willow" ]; then
+        git config user.email "willow@iri.moe"
+        git config user.name "willow"
+    elif [ "$1" == "iris" ]; then
+        git config user.email "iri@iri.moe"
+        git config user.name "iris"
+    else
+        echo "invalid user"
+        exit 1
+    fi
+  '';
+
 in
 {
   home.packages = [
     media-things
     screenshot
     wallpaper
+    gituser
   ];
 }
