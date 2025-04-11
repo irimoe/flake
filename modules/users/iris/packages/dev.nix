@@ -5,7 +5,6 @@
     (pkgs.callPackage ../../../../pkgs/derivations/zed-editor-preview.nix { })
     (pkgs.callPackage ../../../../pkgs/derivations/bun.nix { })
 
-    wayfreeze
     sqlitebrowser
     temurin-bin-23
 
