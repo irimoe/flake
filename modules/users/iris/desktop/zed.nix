@@ -133,7 +133,7 @@ let
 
     current_date=$(date)
     pretty_date=$(date +"%Y-%m-%d %H:%M:%S")
-    backup_file="$HOME/.config/zed/bak/settings.$(pretty_date).json"
+    backup_file="$HOME/.config/zed/bak/settings.$pretty_date.json"
 
     log_content=$(cat "$LOG_FILE" 2>/dev/null || echo "")
 
