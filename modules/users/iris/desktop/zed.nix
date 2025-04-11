@@ -133,7 +133,8 @@ let
 
     current_date=$(date)
     pretty_date=$(date +"%Y-%m-%d %H:%M:%S")
-    backup_file="$HOME/.config/zed/bak/settings.$pretty_date.json"
+    backup_file="$HOME/.config/zed/.bak/settings.$pretty_date.json"
+    latest_file="$HOME/.config/zed/.bak/settings.latest.json"
 
     log_content=$(cat "$LOG_FILE" 2>/dev/null || echo "")
 
@@ -155,6 +156,7 @@ let
 
     echo "|       cmd : mv -f $SETTINGS_FILE $backup_file" >> $LOG_FILE
     mv -f "$SETTINGS_FILE" "$backup_file"
+    cp "$backup_file" "$latest_file"
 
     echo "|       cmd : cp ${pkgs.writeText "zed-settings.json" zedSettings} $SETTINGS_FILE" >> $LOG_FILE
     echo "|       cmd : chmod u+w $SETTINGS_FILE" >> $LOG_FILE
