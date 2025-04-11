@@ -19,7 +19,7 @@
 
 stdenv.mkDerivation rec {
   pname = "zed";
-  version = "0.180.2";
+  version = "0.181.5";
 
   src = fetchurl {
     url = "https://github.com/zed-industries/zed/releases/download/v${version}/zed-linux-x86_64.tar.gz";
@@ -75,7 +75,7 @@ stdenv.mkDerivation rec {
     [Desktop Entry]
     Name=Zed Editor
     Comment=High-performance, multiplayer code editor
-    Exec=$out/bin/zeditor
+    Exec=/usr/bin/env bash -c 'touch ~/.config/zed/env && source ~/.config/zed/env && $out/bin/zeditor'
     Icon=$out/lib/zed/share/icons/hicolor/512x512/apps/zed.png
     Terminal=false
     Type=Application

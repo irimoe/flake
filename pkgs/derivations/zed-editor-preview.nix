@@ -19,7 +19,7 @@
 
 stdenv.mkDerivation rec {
   pname = "zed-preview";
-  version = "0.181.4-pre";
+  version = "0.182.4-pre";
 
   src = fetchurl {
     url = "https://github.com/zed-industries/zed/releases/download/v${version}/zed-linux-x86_64.tar.gz";
@@ -74,7 +74,7 @@ stdenv.mkDerivation rec {
     [Desktop Entry]
     Name=Zed Preview
     Comment=High-performance, multiplayer code editor
-    Exec=$out/bin/zeditor-preview
+    Exec=/usr/bin/env bash -c 'touch ~/.config/zed/env && source ~/.config/zed/env && $out/bin/zeditor-preview'
     Icon=$out/lib/zed-preview/share/icons/hicolor/512x512/apps/zed-preview.png
     Terminal=false
     Type=Application

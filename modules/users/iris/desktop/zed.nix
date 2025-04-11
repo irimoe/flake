@@ -94,28 +94,49 @@ let
 
     language_models.openai = {
       version = "1";
-      api_url = "https://openrouter.ai/api/v1";
+      api_url = "https://llm.chutes.ai/v1";
       available_models = [
         {
-          name = "deepseek/deepseek-r1:free";
-          display_name = "DeepSeek R1";
-          max_tokens = 163840;
-          max_output_tokens = 4096;
-          max_completion_tokens = 4096;
+          name = "deepseek-ai/DeepSeek-V3-0324";
+          display_name = "deepseek v3";
+          max_tokens = 128000;
+          max_output_tokens = 8192;
+          max_completion_tokens = 8192;
         }
         {
-          name = "deepseek/deepseek-chat:free";
-          display_name = "DeepSeek V3";
-          max_tokens = 32768;
+          name = "chutesai/Llama-4-Maverick-17B-128E-Instruct-FP8";
+          display_name = "llama 4 maverick";
+          max_tokens = 1000000;
+          max_output_tokens = 8192;
+          max_completion_tokens = 8192;
+        }
+        {
+          name = "chutesai/Llama-4-Scout-17B-16E-Instruct";
+          display_name = "llama 4 scout";
+          max_tokens = 10000000;
+          max_output_tokens = 8192;
+          max_completion_tokens = 8192;
+        }
+        {
+          name = "deepseek-ai/DeepSeek-R1";
+          display_name = "deepseek r1";
+          max_tokens = 128000;
           max_output_tokens = 32768;
-          max_completion_tokens = 32768;
+          max_completion_tokens = 8192;
         }
         {
-          name = "google/gemini-exp-1206:free";
-          display_name = "Gemini Exp 1206";
-          max_tokens = 131072;
-          max_output_tokens = 128000;
-          max_completion_tokens = 128000;
+          name = "deepseek-ai/DeepSeek-R1-Zero";
+          display_name = "deepseek r1 zero";
+          max_tokens = 128000;
+          max_output_tokens = 8192;
+          max_completion_tokens = 8192;
+        }
+        {
+          name = "moonshotai/Kimi-VL-A3B-Thinking";
+          display_name = "kimi vl a38";
+          max_tokens = 128000;
+          max_output_tokens = 8192;
+          max_completion_tokens = 8192;
         }
       ];
     };
