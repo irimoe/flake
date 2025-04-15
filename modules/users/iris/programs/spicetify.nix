@@ -1,5 +1,9 @@
-{ inputs, pkgs, ... }:
-
+{
+  inputs,
+  pkgs,
+  globalConfig,
+  ...
+}:
 let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system};
 in
@@ -9,7 +13,7 @@ in
   programs.spicetify = {
     enable = true;
     theme = spicePkgs.themes.catppuccin;
-    colorScheme = "mocha";
+    colorScheme = globalConfig.theme.ctp.getCurrent globalConfig;
     enabledExtensions = with spicePkgs.extensions; [
       adblockify
       shuffle

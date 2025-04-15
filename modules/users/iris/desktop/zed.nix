@@ -1,10 +1,10 @@
 {
   pkgs,
   lib,
+  globalConfig,
   ...
 }:
 let
-
   zedSettings = builtins.toJSON {
     collaboration_panel.button = false;
     auto_update = false;
@@ -142,9 +142,9 @@ let
     };
 
     theme = {
-      mode = "dark";
-      dark = "Catppuccin Mocha";
-      light = "Catppuccin Latte";
+      mode = globalConfig.theme.mode;
+      dark = globalConfig.theme.ctp.mkFullName globalConfig.theme.ctp.dark;
+      light = globalConfig.theme.ctp.mkFullName globalConfig.theme.ctp.light;
     };
   };
 

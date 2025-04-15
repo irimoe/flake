@@ -7,5 +7,6 @@
     ./zsh.nix
     ./radicle.nix
     ./spicetify.nix
+    ./swaync.nix
   ];
 }

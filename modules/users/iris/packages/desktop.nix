@@ -17,9 +17,12 @@
     obs-studio-plugins.wlrobs
 
     # desktop environment tools
+    (callPackage ../../../../pkgs/derivations/sylph.nix { })
+    (callPackage ../../../../pkgs/derivations/swaync.nix { })
     wayfreeze
     slurp
     grim
+    swww
 
     imv
     mpv

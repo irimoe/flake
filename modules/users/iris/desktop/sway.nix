@@ -1,5 +1,7 @@
 {
   pkgs,
+  globalConfig,
+  lib,
   ...
 }:
 
@@ -16,16 +18,23 @@ let
   thunderbird = "${pkgs.thunderbird}/bin/thunderbird";
   spotify = "${pkgs.spotify}/bin/spotify";
   keepassxc = "${pkgs.keepassxc}/bin/keepassxc";
+  curl = "${pkgs.curl}/bin/curl";
 
   jq = "${pkgs.jq}/bin/jq";
 
   swaymsg = "${pkgs.sway}/bin/swaymsg";
   swayosd = "${pkgs.swayosd}/bin/swayosd-client";
   swayosd-server = "${pkgs.swayosd}/bin/swayosd-server";
-  swaync = "${pkgs.swaynotificationcenter}/bin/swaync";
-  swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
+  swaync = "swaync";
+  swaync-client = "swaync-client";
 
   get-layout = "${swaymsg} -t get_inputs | ${jq} 'map(select(has(\"xkb_active_layout_name\")))[0].xkb_active_layout_name'";
+
+  ctpTheme = globalConfig.theme.ctp.getCurrent globalConfig;
+
+  includes = ''
+    include _${ctpTheme}
+  '';
 
   direction_keys = {
     left = "q";
@@ -59,6 +68,7 @@ let
     exec ${swaync}
     exec ${swayosd-server}
     exec wallpaper-cycle
+    exec systemctl --user import-environment PATH && systemctl --user restart xdg-desktop-portal.service
 
     exec swaymsg "workspace 3; exec ${editor}"; assign [class="dev.zed.Zed"] 3
     exec swaymsg "workspace 3; exec ${term}"; assign [class="foot"] 3
@@ -70,9 +80,8 @@ let
     exec swaymsg "workspace 2; exec ${discord}"; assign [class="discord"] 2
 
     assign [app_id="nya"] 4
-
     exec swaymsg "workspace 8;"
-    exec /home/iris/Me/bar/target/debug/sylph
+    exec sylph
   '';
 
   floatingRules = ''
@@ -133,6 +142,7 @@ let
     # bindsym ${super}+Tab scratchpad show
 
     bindsym ${super}+grave exec swaymux
+    bindsym ${super}+Shift+grave exec sylph widget toggle bar
     bindsym ${super}+Tab exec ${swaync-client} -t -sw
 
     mode "resize" {
@@ -170,23 +180,27 @@ let
 
     corner_radius 8
     blur enable
-    blur_noise 0.15
-    blur_radius 8
-    default_dim_inactive 0.2
+    blur_radius 2
+    blur_passes 4
+    default_dim_inactive 0.05
 
     default_border pixel 1
-    client.focused_inactive #323232 #323232 #ffffff #323232
-    client.urgent #ff0000 #ff0000 #ffffff #ff0000
-    client.placeholder #000000 #000000 #ffffff #000000
 
-    client.background #282828
+    client.focused           $lavender   $base   $text    $rosewater   $lavender
+    client.focused_inactive  $overlay0   $base   $text    $rosewater   $overlay0
+    client.unfocused         $overlay0   $base   $text    $rosewater   $overlay0
+    client.urgent            $peach      $base   $peach   $overlay0    $peach
+    client.placeholder       $overlay0   $base   $text    $overlay0    $overlay0
+    client.background        $base
 
     shadows enable
-    shadow_color #000000DD
-    shadow_inactive_color #00000000
+    shadow_color #00000040
+    shadow_inactive_color #00000033
 
     # output * bg #0a0a0a solid_color
 
+
+    layer_effects "moe.iri.swaync.overlay" blur enable; blur_ignore_transparent enable
     layer_effects "swaync-notification-window" blur enable; blur_ignore_transparent enable
     layer_effects "swaync-control-center" blur enable; blur_ignore_transparent enable
     layer_effects "swayosd" blur enable; blur_ignore_transparent enable
@@ -204,10 +218,17 @@ let
 in
 {
 
+  home.activation = {
+    downloadCatppuccinTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p ~/.config/sway
+      ${curl} -o ~/.config/sway/_${ctpTheme} https://raw.githubusercontent.com/catppuccin/i3/main/themes/catppuccin-${ctpTheme}
+    '';
+  };
+
   home.packages = [
     pkgs.swayosd
     pkgs.swaymux
-    pkgs.swaynotificationcenter
+    # pkgs.swaynotificationcenter
     pkgs.swaylock
     pkgs.swaylock-fancy
     pkgs.i3lock-color # dep of swaylock-fancy
@@ -223,7 +244,9 @@ in
     config = null; # clear default config
 
     extraConfig =
-      inputConfig
+      includes
+      + "\n"
+      + inputConfig
       + "\n"
       + visuals
       + "\n"

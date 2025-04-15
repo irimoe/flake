@@ -11,6 +11,7 @@
     libsecret
     just
     tmux
+    openssl
 
     imv
     zellij
@@ -38,5 +39,6 @@
     neofetch
     fastfetch
     kittysay
+    hyfetch
   ];
 }

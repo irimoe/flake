@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-
+{ pkgs, globalConfig, ... }:
 {
   programs.foot = {
     enable = true;
@@ -12,11 +11,9 @@
       };
       cursor = {
         style = "beam";
+        color = "eff1f5 dc8a78";
       };
-      colors = {
-        alpha = 0.8;
-        background = "0a0a0a";
-      };
+      colors = globalConfig.theme.ctp.footColours.${globalConfig.theme.ctp.getCurrent globalConfig};
     };
   };
 }

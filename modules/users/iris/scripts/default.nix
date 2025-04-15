@@ -4,7 +4,6 @@ let
 
   swayosd = "${pkgs.swayosd}/bin/swayosd-client";
   playerctl = "${pkgs.playerctl}/bin/playerctl";
-  mpvpaper = "${pkgs.mpvpaper}/bin/mpvpaper";
 
   media-things = pkgs.writeShellScriptBin "media-things" ''
     #!/usr/bin/env bash
@@ -67,12 +66,40 @@ let
 
   wallpaper = pkgs.writeShellScriptBin "wallpaper-cycle" ''
     #!/usr/bin/env bash
-    WALLPAPERS=$(ls /home/iris/Videos/Wallpapers)
-    RND=$(shuf -n 1 <<< "$WALLPAPERS")
+    WALLPAPER_DIR="/home/iris/Videos/Wallpapers"
+    HISTORY_FILE="/home/iris/.wallpaper-history"
+    MAX_HISTORY=10
 
-    pkill -f "mpvpaper"
-    ${mpvpaper} '*' "/home/iris/Videos/Wallpapers/$RND" -o "--loop --no-audio --no-input"
-    ${swayosd} --custom-icon "image-x-generic" --custom-message "Wallpaper changed to '$RND'"
+    touch "$HISTORY_FILE"
+
+    WALLPAPERS=$(ls "$WALLPAPER_DIR")
+    AVAILABLE_WALLPAPERS=$(grep -vxFf "$HISTORY_FILE" <<< "$WALLPAPERS")
+
+    if [[ -z "$AVAILABLE_WALLPAPERS" ]]; then
+        tail -n 1 "$HISTORY_FILE" > "$HISTORY_FILE.tmp"
+        mv "$HISTORY_FILE.tmp" "$HISTORY_FILE"
+        AVAILABLE_WALLPAPERS=$(grep -vxFf "$HISTORY_FILE" <<< "$WALLPAPERS")
+    fi
+
+    RND=$(shuf -n 1 <<< "$AVAILABLE_WALLPAPERS")
+    echo $RND
+    pkill -f "mpvpaper";
+
+    echo "$RND" >> "$HISTORY_FILE"
+    tail -n "$MAX_HISTORY" "$HISTORY_FILE" > "$HISTORY_FILE.tmp"
+    mv "$HISTORY_FILE.tmp" "$HISTORY_FILE"
+
+    if [[ "$RND" == *.webm ]]; then
+        pkill -f "mpvpaper"; pkill -f "swww";
+        mpvpaper '*' "$WALLPAPER_DIR/$RND" -o "--loop --no-audio --no-input" >/dev/null 2>&1 &
+    else
+        if [[ ! $(pgrep -x "swww-daemon") ]]; then
+            swww-daemon &
+            sleep 0.5
+        fi
+        echo $(pgrep -x "swww-daemon")
+        swww img "$WALLPAPER_DIR/$RND" -t grow
+    fi
   '';
 
   gituser = pkgs.writeShellScriptBin "gituser" ''

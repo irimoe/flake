@@ -20,12 +20,19 @@
     }@inputs:
     let
       system = "x86_64-linux";
+      globalConfig = import (self + "/config.nix") {
+        lib = nixpkgs.lib;
+        pkgs = nixpkgs.legacyPackages.${system};
+      };
     in
     {
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit inputs; };
+          specialArgs = {
+            inherit inputs globalConfig;
+            rootPath = self;
+          };
 
           modules = [
             # system configuration
@@ -58,7 +65,11 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                extraSpecialArgs = { inherit inputs; };
+                extraSpecialArgs = {
+                  inherit inputs;
+                  rootPath = self;
+                  globalConfig = globalConfig;
+                };
                 users.iris = import ./modules/users/iris;
               };
             }
